@@ -42,7 +42,7 @@ export default {
     <div class="flex-item"><button @click="createItinerary" style="float: right;" class="button">Create New Itinerary</button></div>
   </div>
     <div>
-      <table class="table">
+      <v-table class="rounded-lg elevation-5">
         <thead>
           <tr>
             <th>Itinerary ID</th>
@@ -62,7 +62,7 @@ export default {
             <td>{{ item.endDate }}</td>
           </tr>
         </tbody>
-      </table>
+      </v-table>
     </div>
   </div>
 </template>

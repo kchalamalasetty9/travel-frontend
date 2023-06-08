@@ -8,9 +8,9 @@ import { createVuetify } from "vuetify";
 const OCTheme = {
   dark: false,
   colors: {
-    primary: "#80162B",
+    primary: "#0d3c61",
     secondary: "#E1E1E1",
-    accent: "#47121D",
+    accent: "#1a78c2",
     success: "#47121D",
     error: "#EE5044",
     teal: "#63BAC0",
