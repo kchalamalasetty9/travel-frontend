@@ -16,7 +16,9 @@ export default {
   getItinerary(itineraryId) {
     return apiClient.get(`itineraries/${itineraryId}`);
   },
-
+  getHotels(){
+    return apiClient.get('hotels')
+  },
   
 };
 

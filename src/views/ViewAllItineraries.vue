@@ -45,7 +45,6 @@ export default {
       <v-table class="rounded-lg elevation-5">
         <thead>
           <tr>
-            <th>Itinerary ID</th>
             <th>Itinerary Name</th>
             <th>Start Date</th>
             <th>End Date</th>
@@ -54,10 +53,8 @@ export default {
         <tbody>
           <tr v-for="item in items" :key="item.id">
             <td>
-              <router-link :to="{ name: 'edit-itinerary', params: { id: item.id }}">{{ item.id }}</router-link>
-              
+              <router-link :to="{ name: 'edit-itinerary', params: { id: item.id }}">{{ item.name }}</router-link>
             </td>
-            <td>{{ item.name }}</td>
             <td>{{ item.startDate }}</td>
             <td>{{ item.endDate }}</td>
           </tr>

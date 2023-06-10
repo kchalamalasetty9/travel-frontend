@@ -1,64 +1,125 @@
 <template>
-  <div class="form-container">
-    <h1 class="form-header">Create Itinerary</h1>
-    <form  @submit.prevent="handleSubmit" >
-      <label for="name">Itinerary Name:</label>
-      <input class="input" type="text" id="name" v-model="itinerary.name" required>
+  <v-container class="form-container">
+    <v-row justify="center">
+      <v-col cols="12">
+        <h1 class="form-header">Create Itinerary</h1>
+        <v-form @submit.prevent="handleSubmit">
+          <v-row>
+            <v-col cols="12">
+              <v-text-field v-model="itinerary.name" label="Itinerary Name" required></v-text-field>
+            </v-col>
+          </v-row>
 
-      <br>
-      <label for="date">Start Date:</label>
-      <input type="date" id="startDate" v-model="itinerary.startDate" required>
+          <v-row>
+            <v-col cols="6">
+              <v-text-field v-model="itinerary.startDate" label="Start Date" type="date" required></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field v-model="itinerary.endDate" label="End Date" type="date" required></v-text-field>
+            </v-col>
+          </v-row>
 
-      <br>
-      <label for="date">End Date:</label>
-      <input type="date" id="endDate" v-model="itinerary.endDate" required>
+          <v-row>
+            <v-col cols="12">
+              <v-card>
+                <v-card-title>
+                  <div>
+                    <span>Days</span>
+                    <v-btn @click="addDay" color="primary" small class="ml-4">
+                      Add Day
+                    </v-btn>
+                  </div>
+                </v-card-title>
+                <v-card-text>
+                  <v-row v-for="(day, index) in itinerary.days" :key="index">
+                    <v-col cols="12">
+                      <h2 class="mb-4">Day {{ index + 1 }}</h2>
+                      <v-text-field v-model="day.date" label="Date" type="date" required></v-text-field>
+                    </v-col>
 
-      <br>
-      <div>
-        <span>Days</span>
-        <button class="button" @click="addDay">Add Day</button>
-      </div>
-      <div v-for="(day, index) in itinerary.days" :key="index">
-        <h2>Day {{ index + 1 }}</h2>
-        <label for="date">Date:</label>
-        <input type="date" v-model="day.date" required>
+                    <v-col cols="12">
+                      <v-card>
+                        <v-card-title>
+                          <div>
+                            Destinations
+                            <v-btn @click="addDestination(index)" color="primary" small class="ml-4">
+                              Add Destination
+                            </v-btn>
+                          </div>
+                        </v-card-title>
+                        <v-card-text>
+                          <v-row v-for="(destination, destIndex) in day.destinations" :key="destIndex">
+                            <v-col cols="12">
+                              <h3>Destination {{ destIndex + 1 }}</h3>
+                              <v-row>
+                                <v-col cols="6"><v-text-field v-model="destination.location" label="Location"
+                                    required></v-text-field>
+                                </v-col>
+                                <v-col cols="6">
+                                  <v-select v-model="destination.hotel" :items="hotels"
+                                   :item-title="'hotel_name'" :item-value="'id'" :hint="destination.hotel && `address: ${destination.hotel.address} | rating: ${ destination.hotel.rating }`"
+                                    label="Select Hotel" 
+                                    persistent-hint
+                                    variant="underlined"
+                                    return-object
+                                    single-line
+                                    ></v-select>
 
-        <div>
-          Destinations:
-          <button class="button" @click="addDestination(index)">Add Destination</button>
-        </div>
+                                </v-col>
+                              </v-row>
+                            </v-col>
 
-        <div v-for="(destination, destIndex) in day.destinations" :key="destIndex">
-          <h3>Destination {{ destIndex + 1 }}</h3>
-          <label for="location">Location:</label>
-          <input type="text" v-model="destination.location" required>
+                            <v-col cols="12">
+                              <v-card>
+                                <v-card-title>
+                                  <div>
+                                    <span>Activities</span>
+                                    <v-btn @click="addActivity(index, destIndex)" color="primary" small class="ml-4">
+                                      Add Activity
+                                    </v-btn>
+                                  </div>
+                                </v-card-title>
+                                <v-card-text>
+                                  <v-row v-for="(activity, actIndex) in destination.activities" :key="actIndex">
+                                    <v-col cols="12">
+                                      <h4>Activity {{ actIndex + 1 }}</h4>
+                                      <v-text-field v-model="activity.name" label="Name" required></v-text-field>
+                                      <v-row>
+                                        <v-col cols="6"><v-text-field v-model="activity.startTime" label="Start Time"
+                                            type="time" required></v-text-field></v-col>
+                                        <v-col cols="6"><v-text-field v-model="activity.endTime" label="End Time"
+                                            type="time" required></v-text-field></v-col>
+                                      </v-row>
+                                    </v-col>
+                                  </v-row>
+                                </v-card-text>
+                              </v-card>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
 
-          <br>
-          <div class="form-card">
-            <div>
-              <span>Activities</span>
-              <button class="button" @click="addActivity(index, destIndex)">Add Activity</button>
-            </div>
-            <div v-for="(activity, actIndex) in destination.activities" :key="actIndex">
-              <h4>Activity {{ actIndex + 1 }}</h4>
-              <label for="activityName">Name:</label>
-              <input type="text" v-model="activity.name" required>
-              <label for="startTime">Start Time:</label>
-              <input type="time" v-model="activity.startTime" required>
-              <label for="endTime">End Time:</label>
-              <input type="time" v-model="activity.endTime" required>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button class="button" type="submit">Create</button>
-    </form>
-  </div>
+          <v-btn type="submit" color="primary" class="mt-4">
+            Create
+          </v-btn>
+        </v-form>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
+
 
 <script>
 
+import { ref, onMounted } from 'vue';
 import ItineraryServices from '../services/ItineraryServices';
+const hotels = ref([])
 
 export default {
   data() {
@@ -77,12 +138,13 @@ export default {
                     start_time: '',
                     end_time: ''
                   }
-                ]
+                ],
               }
             ]
           }
         ]
-      }
+      },
+      hotels: []
     };
   },
   methods: {
@@ -127,8 +189,26 @@ export default {
         end_time: ''
       });
     }
+  },
+  setup() {
+    const hotels = ref([]);
+    const fetchHotels = async () => {
+      try {
+        const response = await ItineraryServices.getHotels();
+        hotels.value = await response.data;
+        console.log(hotels.value)
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    onMounted(async () => {
+      await fetchHotels();
+    })
+    return { hotels }
   }
+
 };
+
 </script>
 
 <style>
@@ -157,35 +237,5 @@ export default {
   margin-top: 10px;
 }
 
-input {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.input {
-  width: 300px;
-  height: 40px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-.button {
-  display: inline-block;
-  padding: 5px 10px;
-  margin-bottom: 2px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
 </style>
 
