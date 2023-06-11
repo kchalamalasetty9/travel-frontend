@@ -6,6 +6,7 @@ import ItineraryServices from '../services/ItineraryServices.js';
 export default {
   setup() {
     const items = ref([]);
+    const searchText = ref("");
     const router = useRouter();
 
     const fetchData = async () => {
@@ -26,20 +27,31 @@ export default {
     function createItinerary () {
       router.push('/create-itinerary');
     }
-
     return {
-      items, createItinerary
+      items, createItinerary, searchText
     };
   },
+  computed: {
+    filteredItems() {
+      return this.items.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()));
+    },
+  }
   
 };
 </script>
 
 <template>
-  <div style="margin-top: 20px;" class="form-container">
-    <div class="flex-container">
+  <div class="form-container mt-5">
+    <div class="flex-container mb-2">
     <div class="flex-item"><h2 class="form-header">My Itineraries</h2></div>
-    <div class="flex-item"><button @click="createItinerary" style="float: right;" class="button">Create New Itinerary</button></div>
+    <div class="flex-item">
+      <button @click="createItinerary" style="float: right;" class="button ml-4" >Create New Itinerary</button>
+      <v-text-field v-model="searchText" label="Search Itineraries" append-inner-icon="mdi-magnify" density="compact"
+        variant="solo"
+        single-line
+        hide-details ></v-text-field>
+        
+      </div>
   </div>
     <div>
       <v-table class="rounded-lg elevation-5">
@@ -51,7 +63,7 @@ export default {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.id">
+          <tr v-for="item in filteredItems" :key="item.id">
             <td>
               <router-link :to="{ name: 'edit-itinerary', params: { id: item.id }}">{{ item.name }}</router-link>
             </td>
@@ -69,7 +81,7 @@ export default {
 .flex-container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .flex-item {
